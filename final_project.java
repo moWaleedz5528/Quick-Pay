@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 public class final_project {
 
@@ -11,43 +12,117 @@ public class final_project {
     //=================
 
     static int User_Count = 0; // عدد المستخدمين الحالي
-    static int [] User_IDs = new int[50]; 
-    static String [] User_Names = new String[50];
-    static String [] User_Emails = new String[50];
-    static String [] User_Phone_Numbers = new String[50];
-    static String [] User_Passwords = new String[50];
-    static long [] User_Balances = new long[50]; // مكتوب نستخدم لونج احسن من دابل
+    static int capacity = 5; // السعة الحالية للأراي
+    static int [] User_IDs = new int[capacity];
+    static String [] User_Names = new String[capacity];
+    static String [] User_Emails = new String[capacity];
+    static String [] User_Phone_Numbers = new String[capacity];
+    static String [] User_Passwords = new String[capacity];
+    static long [] User_Balances = new long[capacity]; // مكتوب نستخدم لونج احسن من دابل
     
-    static boolean [] Active_Users = new boolean[50];
+    static boolean [] Active_Users = new boolean[capacity];
 
     // active = true يعني المستخدم نشط  ; active = false يعني المستخدم غير نشط او معموله بلوك من الادمن
 
 
-    static int [][] Favorites = new int[50][10]; // الارقام المفضلة لكل مستخدم
+    static int [][] Favorites = new int[capacity][10]; // الارقام المفضلة لكل مستخدم
     // لكل مستخدم 10 ارقام مفضلة بس
 
-    static int [] Favorites_Count = new int[50];
+    static int [] Favorites_Count = new int[capacity];
     // هما 50 مستخدم و كل مستخدم له 10 ارقام مفضلة بس ف هو هيلف 50 لفة او بمعنى اخر 50 رقم مفضل ك توتال لان عدد المستخدمين اخره 50
 
     static int Transaction_Count = 0; // عدد العمليات الحالية
-    static int [] Transaction_IDs = new int[500]; // زودت عدد العمليات ل 500 بدل 50 عشان لو في عمليات كتير
-    static int [] Transaction_Senders = new int[500];
-    static int [] Transaction_Receivers = new int[500];
-    static long [] Transaction_Amounts = new long[500]; // زي ما قولت ال لونج احسن من الدابل
-    static String [] Transaction_Statuses = new String[500];
+    static int Transaction_Capacity = 5; // السعة الحالية للأراي
+
+    static int [] Transaction_IDs = new int[Transaction_Capacity]; // زودت عدد العمليات ل 50 بدل 50 عشان لو في عمليات كتير
+    static int [] Transaction_Senders = new int[Transaction_Capacity];
+    static int [] Transaction_Receivers = new int[Transaction_Capacity];
+    static long [] Transaction_Amounts = new long[Transaction_Capacity]; // زي ما قولت ال لونج احسن من الدابل
+    static String [] Transaction_Statuses = new String[Transaction_Capacity];
     
     // static int [] Transaction_Types = new int[500]; // 1 = send money , 2 = add money , 3 = withdraw money
     // لسه بفكر فيها
 
+    
     //==============================================================================================================================\\
 
+
+    // Arrays Methods
+    //================
+
+    public static void growUses() // بتشتغل اول ما ال array تتملى ف بتزود سايز ال array كل مرة لما تزيد ب 1
+    {
+        int newCapacity = capacity + 1;
+        User_IDs = Arrays.copyOf(User_IDs, newCapacity);
+        User_Names = Arrays.copyOf(User_Names, newCapacity);
+        User_Emails = Arrays.copyOf(User_Emails, newCapacity);
+        User_Phone_Numbers = Arrays.copyOf(User_Phone_Numbers, newCapacity);
+        User_Passwords = Arrays.copyOf(User_Passwords, newCapacity);
+        User_Balances = Arrays.copyOf(User_Balances, newCapacity);
+        Active_Users = Arrays.copyOf(Active_Users, newCapacity);
+        Favorites_Count = Arrays.copyOf(Favorites_Count, newCapacity);
+
+        Favorites = Arrays.copyOf(Favorites, newCapacity);
+
+        for (int i = 0; i < newCapacity; i++)
+        {
+
+            Favorites[i] = new int[10];
+            // عملت لوب عشان كل أراي من المفضله ليها أراي مخصصه ليها اللي هما ال 10 يوزرز
+
+        }
+
+        capacity = newCapacity; // new declaration.
+    }
+
+
+    //==============================================================================================================================\\
+
+
+    public static void growTransactions()
+    {
+        int newCapacity = Transaction_Capacity + 1;
+
+        Transaction_IDs = Arrays.copyOf(Transaction_IDs, newCapacity);
+        Transaction_Senders = Arrays.copyOf(Transaction_Senders, newCapacity);
+        Transaction_Receivers = Arrays.copyOf(Transaction_Receivers, newCapacity);
+        Transaction_Amounts = Arrays.copyOf(Transaction_Amounts, newCapacity);
+        Transaction_Statuses = Arrays.copyOf(Transaction_Statuses, newCapacity);
+
+        Transaction_Capacity = newCapacity;
+    }
+
+    public static void addTransaction(int sender, int receiver, int amount, String status) // نفس شغل ال addUser
+    {
+        if ( Transaction_Count >= Transaction_Capacity )
+        {
+            growTransactions();
+        }
+
+        Transaction_IDs[Transaction_Count] = 1001 + Transaction_Count; // ال id بيبدأ من 1001 نفس فكرة ال userIDs
+        // ممكن نختار اي رقم مش لازم 1001 ممكم اي رقم بس انا ماشي على نفس النمط فوق ال IDs من 101 هنا هتبدأ من 1001
+
+        Transaction_Senders[Transaction_Count] = sender;
+        Transaction_Receivers[Transaction_Count] = receiver;
+        Transaction_Amounts[Transaction_Count] = amount;
+        Transaction_Statuses[Transaction_Count] = status; // 1 . Successful , 2 . Failed , 3 . Pending
+
+        Transaction_Count++;
+
+    }
+
+
+
+
+    //==============================================================================================================================\\
     
+
     public static void addUser(String name, String email, String phone_number, String password, long balance, boolean Active ) // The parameters
     {
 
-        if (User_Count >= User_Names.length)
+        if (User_Count >= capacity)
         {
-            System.out.println("No space more for users");
+            System.out.println("Maximum number of users reached ! ");
             return; // عشان يخرج علطول لو مفيش مكان في ال array
         }
 
@@ -463,6 +538,11 @@ public class final_project {
 //             System.out.println(User_Names[i] + " --> " + User_IDs[i]); // مجرد تجربة بتأكد من صحة ال User IDs
 //         }
         //=========================================================================================================\\
+
+        // for (int i = 0; i < Transaction_Count; i++)
+        //  {
+        //      System.out.println(" --> " + Transaction_IDs[i]); // مجرد تجربة بتأكد من صحة ال User IDs
+        //  }
 
     }
 }
