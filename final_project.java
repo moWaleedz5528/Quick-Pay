@@ -11,7 +11,7 @@ public class final_project {
 
     //=================
 
-    static int User_Count = 0; // عدد المستخدمين الحالي
+    static int User_Count = 0; // Inintially (قيمة مبدأيه)
     static int capacity = 5; // السعة الحالية للأراي
     static int [] User_IDs = new int[capacity];
     static String [] User_Names = new String[capacity];
