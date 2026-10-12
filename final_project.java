@@ -29,12 +29,12 @@ public class final_project {
     // لكل مستخدم 10 ارقام مفضلة بس
 
     static int [] Favorites_Count = new int[capacity];
-    // هما 50 مستخدم و كل مستخدم له 10 ارقام مفضلة بس ف هو هيلف 50 لفة او بمعنى اخر 50 رقم مفضل ك توتال لان عدد المستخدمين اخره 50
+    
 
     static int Transaction_Count = 0; // عدد العمليات الحالية
     static int Transaction_Capacity = 5; // السعة الحالية للأراي
 
-    static int [] Transaction_IDs = new int[Transaction_Capacity]; // زودت عدد العمليات ل 50 بدل 50 عشان لو في عمليات كتير
+    static int [] Transaction_IDs = new int[Transaction_Capacity]; 
     static int [] Transaction_Senders = new int[Transaction_Capacity];
     static int [] Transaction_Receivers = new int[Transaction_Capacity];
     static long [] Transaction_Amounts = new long[Transaction_Capacity]; // زي ما قولت ال لونج احسن من الدابل
