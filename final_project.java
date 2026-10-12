@@ -91,11 +91,15 @@ public class final_project {
     public static boolean Admin_Login()
     {
         System.out.println("==================================");
+
         System.out.print("Admin Username : ");
-        String userName = input.next();
+        String userName;
+        userName = input.nextLine();
 
         System.out.print("Admin Password : ");
-        String password = input.next();
+        String password;
+        password = input.nextLine();
+
         System.out.println("==================================");
         
         if(userName.equals("admin") && password.equals("admin123"))
@@ -116,10 +120,12 @@ public class final_project {
     {
         System.out.println("==================================");
         System.out.print("User Email : ");
-        String email = input.next();
+        String email;
+        email = input.nextLine();
     
         System.out.print("User Password : ");
-        String password = input.next();
+        String password;
+        password = input.nextLine();
         System.out.println("==================================");
 
         for (int i = 0; i < User_Count; i++)
@@ -195,7 +201,8 @@ public class final_project {
 
             
             System.out.print("Enter your choice : ");
-            String choice_admin = input.next();
+            String choice_admin;
+            choice_admin = input.nextLine();
 
 
             switch (choice_admin) 
@@ -307,7 +314,8 @@ public class final_project {
             System.out.println("10 . Logout");
 
             System.out.print("Enter your choice : ");
-            String choice_user = input.next();
+            String choice_user;
+            choice_user = input.nextLine();
 
             switch (choice_user) 
             {
@@ -401,7 +409,8 @@ public class final_project {
             System.out.println( "3 . Exit");
 
             System.out.print("Enter your choice : ");
-            String choice_main = input.next(); //////
+            String choice_main;//////
+            choice_main = input.nextLine();
 
             switch (choice_main) 
             {
@@ -449,10 +458,10 @@ public class final_project {
         
 
         //=========================================================================================================\\
-        // for (int i = 0; i < User_Count; i++)
-        // {
-        //     System.out.println(User_Names[i] + " --> " + User_IDs[i]); // مجرد تجربة بتأكد من صحة ال User IDs
-        // }
+//         for (int i = 0; i < User_Count; i++)
+//         {
+//             System.out.println(User_Names[i] + " --> " + User_IDs[i]); // مجرد تجربة بتأكد من صحة ال User IDs
+//         }
         //=========================================================================================================\\
 
     }
