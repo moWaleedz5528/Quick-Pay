@@ -92,6 +92,8 @@ public class final_project {
         Transaction_Capacity = newCapacity;
     }
 
+
+
     public static void addTransaction(int sender, int receiver, int amount, String status) // نفس شغل ال addUser
     {
         if ( Transaction_Count >= Transaction_Capacity )
@@ -122,8 +124,10 @@ public class final_project {
 
         if (User_Count >= capacity)
         {
-            System.out.println("Maximum number of users reached ! ");
-            return; // عشان يخرج علطول لو مفيش مكان في ال array
+            growUses();
+
+//            System.out.println("Maximum number of users reached ! ");
+//            return; // عشان يخرج علطول لو مفيش مكان في ال array
         }
 
 
@@ -157,9 +161,108 @@ public class final_project {
         // مش فارقة الترتيب ها مشوا الدنيا
     }
 
-    
+
+
+    // Helping Methods \\
+    //=================\\
+
+    // ميثود بتشوف رقم الاندكس متطابق مع الحاجه اللي بنبحث عنها لليوزر ولا لا
+    //======================================================================
+
+    public static boolean doesMatch(int i, String key) // بتاخد رقم الاندس بتاع اليوزر تفحصه ف الارايز و بعد كده تشوف في تطابق بين أيا كان اللي هيدخله الادمن سواء اسم او اي حاجه تانيه و تشوف هيتطابق مع الاندكس ولا لا
+    {
+        return String.valueOf(User_IDs[i]).equals(key) // ( String.valueOf ) --> بتحول اي رقم ل سترينج يعني هتحول الأي دي بتاع كل يوزر لبياناته اللي هي الاسم و الايميل و هكذا عشان نقدر نعمله بلوك او نشيله ب اي طريقة
+                || // ( || )==> OR
+                User_Names[i].equalsIgnoreCase(key)
+                ||
+                User_Emails[i].equalsIgnoreCase(key)
+                ||
+                User_Phone_Numbers[i].equalsIgnoreCase(key);
+
+    }
+
+    // ميثود بتعد تشابهات الاسماء و لو في اسمين متشابهين بتقول ان الاسم متكرر ابحث بطريقة تانيه
+    //==========================================================================================
+
+    public static int countMatches(String key)
+    {
+        int count = 0;
+
+        for (int i = 0; i < User_Count; i++)
+        {
+            if ( doesMatch(i, key) )
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // لو اكتر من يوزر هنقول ف ميثودز البلوك duplicate name  لو اسم واحد تمام لو مفيش اصلا يعني 0 هيقول not found
+    // شوفوها ف ميثود ال unblock و هتفهموا
+
+
+    // ميثود بتحول القروش ل جنيهات
+    //=============================
+
+    public static String moneyFormat(long piasters)
+    {
+        long pounds = piasters / 100; // الجنيهات
+        long rest = piasters % 100; // القروش (عملناها بال % modules عشان تطلع الباقي من ناتج القسمة بتاعت الجنيهات و هو القروش )
+
+        if ( rest < 10 ) // لو القروش اقل من 10 قروش يخليها ( 01. ) مثلا و ممكن بدل ال 1 اي رقم لحد 9
+        {
+            return pounds + ".0" + rest + " EGP"; // هنا هيطلعها مثلا 100.03
+        }
+        else // هنا هيطلعها عادي مثال 100.3
+        {
+            return pounds + "." + rest + " EGP";
+        }
+    }
+
+
+
+    //==============================================================================================================================\\
+
+
     //==============================// Login \\==============================\\
     //==============================//=======\\==============================\\
+
+
+
+
+    // Asking Try Again or Exit Method \\
+    //=================================\\
+
+    // \\ سيبوها دلوقتي هنعملها في الاخر مع ال sign up
+    //=============================================\\
+
+    public static boolean askingTryAgain() // NOT USED YETTTTTT
+    {
+        while (true)
+        {
+            System.out.println("1. Try again");
+            System.out.println("2. Exit");
+            System.out.print("Choose an option: ");
+            String choice = input.nextLine().trim();
+
+            switch (choice)
+            {
+                case "1":
+                    return true;  // Try again
+
+                case "2":
+                    return false; // Exit
+
+                default:
+                    System.out.println("Invalid choice. Please enter 1 or 2.");
+                    // مفيش return هنا ف اللوب بتلف وتسأل تاني
+            }
+        }
+    }
+
+
+    //==============================================================================================================================\\
 
     // For Admins
     //============
@@ -234,8 +337,292 @@ public class final_project {
 
     // Admin Methods
     //===============
-    
+
     // اكتبوا ميثودز الادمن هنا \\
+    //============================
+
+
+    // Show Statistics Method
+    //========================
+
+    public static void showStatistics()
+    {
+        int activeCount = 0;
+        int blockedCount = 0;
+        long totalBalance = 0;
+
+        for (int i = 0; i < User_Count; i++)
+        {
+            if (Active_Users[i])
+            {
+                activeCount++;
+            }
+
+            else
+            {
+                blockedCount++;
+            }
+
+            totalBalance += User_Balances[i];
+        }
+
+        int successTrans = 0;
+        int failedTrans = 0;
+        long totalSuccessAmount = 0; // = total transferred // مجموع الفلوس الناجحة بس
+
+        for (int i = 0; i < Transaction_Count; i++)
+        {
+            if (Transaction_Statuses[i].equalsIgnoreCase("Successful"))
+            {
+                successTrans++;
+                totalSuccessAmount += Transaction_Amounts[i];
+            }
+            else if (Transaction_Statuses[i].equalsIgnoreCase("Failed"))
+            {
+                failedTrans++;
+            }
+        }
+
+        // ---------
+        //
+
+        System.out.println("====================================");
+        System.out.println("========= << STATISTICS >> =========");
+        System.out.println("====================================");
+
+        System.out.println("          ||    Users   ||          ");
+        System.out.println("------------------------------------");
+        System.out.println("Total Registered Users : " + User_Count);
+        System.out.println("Active Users           : " + activeCount);
+        System.out.println("Blocked Accounts       : " + blockedCount);
+        System.out.println("Total Balances         : " + moneyFormat(totalBalance));
+
+        System.out.println("====================================");
+
+        System.out.println("        ||  Transactions  ||        ");
+        System.out.println("------------------------------------");
+        System.out.println("Total Transactions : " + Transaction_Count);
+        System.out.println("Successful Transactions: " + successTrans);
+        System.out.println("Failed Transactions    : " + failedTrans);
+        System.out.println("Total Successful Amount: " + moneyFormat(totalSuccessAmount));
+        System.out.println("===================================");
+
+        // عايزين نضيف total balances يعني تجمع الفلوس اللي موجودة كلها
+        // و نضيف total transactions
+        // و نضيف خانة add users في ال admin panel
+        // و نضيف sign up
+
+
+    }
+
+
+    // View All Users Method
+    //=======================
+
+    public static void viewAllUsers()
+    {
+        System.out.println("===================================");
+        System.out.println("========= << ALL USERS >> =========");
+        System.out.println("===================================");
+
+        if (User_Count == 0)
+        {
+            System.out.println("No users registered yet.");
+        }
+        else
+        {
+            for (int i = 0; i < User_Count; i++)
+            {
+                String status;
+                if (Active_Users[i])
+                {
+                    status = "Active";
+                }
+                else
+                {
+                    status = "Blocked";
+                }
+
+                System.out.println(
+                        "ID: " + User_IDs[i] +
+
+                        " || Name: " + User_Names[i] +
+
+                        " || Email: " + User_Emails[i] +
+
+                        " || Phone: " + User_Phone_Numbers[i] +
+
+                        " || Balance: " + moneyFormat(User_Balances[i]) +
+
+                        " || Status: " + status
+                );
+            }
+        }
+        System.out.println("===================================");
+    }
+
+
+    // Show All Users Method
+    //=======================
+
+    public static void showAllTransaction() {
+    System.out.println("===================================");
+    System.out.println("===== << ALL TRANSACTIONS >> ======");
+    System.out.println("===================================");
+
+    if (Transaction_Count == 0)
+    {
+    System.out.println("No transactions recorded yet.");
+    }
+    else
+    {
+        for (int i = 0; i < Transaction_Count; i++)
+        {
+            System.out.println(
+                        "Transaction ID: " + Transaction_IDs[i] +
+
+                        " || Sender: " + Transaction_Senders[i] +
+
+                        " || Receiver: " + Transaction_Receivers[i] +
+
+                        " || Amount: " + moneyFormat(Transaction_Amounts[i]) +
+
+                        " || Status: " + Transaction_Statuses[i]
+            );
+        }
+    }
+        System.out.println("===================================");
+    }
+
+
+    // Unblock Users Method
+    //======================
+
+    public static void unblockAccount()
+    {
+        System.out.println("===================================");
+        System.out.print("Enter ID , email , phone or name of the user to unblock : ");
+        String choice_unblock;
+        choice_unblock = input.nextLine();
+
+        int count = countMatches(choice_unblock);
+
+        if (count == 0)
+        {
+            System.out.println("User not found !");
+            return;
+        }
+
+
+        if (count > 1) //عملتها if بس عشان قبلها return و لو ال return تحققت بتطلع علطول من الميثود
+        {
+            System.out.println("More than one user found ! , Please use another way .");
+            return;
+        }
+
+        for (int i = 0; i < User_Count; i++)
+        {
+            if (doesMatch (i , choice_unblock) )
+            {
+                if (Active_Users[i]) // يعني اليوزر موجود اساسا مش معموله بلوك
+                {
+                    System.out.println("Account is already active !");
+                }
+                else
+                {
+                    Active_Users[i] = true;
+                    System.out.println(User_Names[i] + "'s account has been unblocked !"); // The output --> [User]'s account has been unblocked !
+                }
+
+                return;
+
+            }
+        }
+    }
+
+    // View User's Details Method
+    //=============================
+
+    public static void viewUserDetails()
+    {
+        System.out.println("===================================");
+        System.out.print("Enter ID , email , phone or name of the user to view : ");
+        String choice_user_details;
+        choice_user_details = input.nextLine();
+
+        int count = countMatches(choice_user_details);
+
+        if (count == 0)
+        {
+            System.out.println("User not found !");
+            return;
+        }
+
+        if (count > 1)
+        {
+            System.out.println("More than one user found !");
+            return;
+        }
+
+        //فوق هنا اتأكدنا انه يوزر واحد بس ف نعمل لوب و نلف و نجيبه
+
+
+        for (int i = 0; i < User_Count; i++)
+        {
+
+
+            String status;
+            if (Active_Users[i])
+            {
+                status = "Active";
+            }
+            else
+            {
+                status = "Blocked";
+            }
+
+
+
+
+            if ( doesMatch (i , choice_user_details) )
+            {
+                int sent = 0;
+                int recieved = 0;
+
+                for (int j = 0; j < Transaction_Count; j++)
+                {
+                    if ( Transaction_Senders[j] == i)
+                    {
+                        sent++;
+                    }
+
+                    if (Transaction_Receivers[j] == i && Transaction_Statuses[j].equalsIgnoreCase("Successful"))
+                    {
+                        recieved++;
+                    }
+                }
+
+                System.out.println("=====================================");
+                System.out.println("========= <<User Details >> =========");
+                System.out.println("=====================================");
+
+                System.out.println("ID          : " + User_IDs[i]);
+                System.out.println("Name        : " + User_Names[i]);
+                System.out.println("Email       : " + User_Emails[i]);
+                System.out.println("Phone       : " + User_Phone_Numbers[i]);
+                System.out.println("Balance     : " + moneyFormat(User_Balances[i]));
+                System.out.println("Status      : " + status);
+                System.out.println("Favourites  : " + Favorites_Count[i]);
+                System.out.println("Sent        : " + sent + " transaction(s)");
+                System.out.println("Recieved    : " + recieved + " transaction(s)");
+
+                System.out.println("=====================================");
+
+                return;
+            }
+        }
+    }
+
 
     
 
@@ -284,17 +671,17 @@ public class final_project {
             {
             case "1":
 
-                // showStatistics()
+                showStatistics();
                 break;
 
             case "2":
 
-                // searchUser()
+//                 searchUser();
                 break;
 
             case "3":
 
-                // viewAllUsers()
+                viewAllUsers();
                 break;
 
             case "4":
@@ -303,7 +690,7 @@ public class final_project {
                 break;
             case "5":
 
-                // showAllTransaction()
+                showAllTransaction();
                 break;
 
             case "6":
@@ -313,12 +700,12 @@ public class final_project {
 
             case "7":
 
-                // unblockAccount()
+                unblockAccount();
                 break;
 
             case "8":
 
-                // viewUserDetails()
+                viewUserDetails();
                 break;
 
             case "9":
@@ -484,7 +871,7 @@ public class final_project {
             System.out.println( "3 . Exit");
 
             System.out.print("Enter your choice : ");
-            String choice_main;//////
+            String choice_main;
             choice_main = input.nextLine();
 
             switch (choice_main) 
