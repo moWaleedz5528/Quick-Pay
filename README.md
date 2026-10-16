@@ -16,7 +16,6 @@ We didn't use any database or ArrayList. Everything is stored in plain arrays, a
 You need Java (JDK) installed. Put `final_project.java` in a folder, open a terminal there and run:
 
 ```
-javac final_project.java
 java final_project
 ```
 
