@@ -237,9 +237,7 @@ public class final_project {
 
         return -1;
     }
-    // Unused method
-    // نقدر نعمل فكرة اننا نبعت فلوس ب ايميل او رقم موبايل مش رقم موبايل بس
-
+    
 
 
     //==============================================================================================================================\\
@@ -273,39 +271,6 @@ public class final_project {
 
     //==============================// Login \\==============================\\
     //==============================//=======\\==============================\\
-
-
-
-
-    // Asking Try Again or Exit Method \\
-    //=================================\\
-
-    // \\ سيبوها دلوقتي هنعملها في الاخر مع ال sign up
-    //=============================================\\
-
-    public static boolean askingTryAgain() // NOT USED YETTTTTT
-    {
-        while (true)
-        {
-            System.out.println("1. Try again");
-            System.out.println("2. Exit");
-            System.out.print("Choose an option: ");
-            String choice = input.nextLine().trim();
-
-            switch (choice)
-            {
-                case "1":
-                    return true;  // Try again
-
-                case "2":
-                    return false; // Exit
-
-                default:
-                    System.out.println("Invalid choice. Please enter 1 or 2.");
-                    // مفيش return هنا ف اللوب بتلف وتسأل تاني
-            }
-        }
-    }
 
 
     //==============================================================================================================================\\
